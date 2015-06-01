@@ -74,8 +74,13 @@ $.nette.ext('history', {
 			this.href = null;
 		} else if (!settings.nette.form) {
 			this.href = settings.nette.ui.href;
-		} else if (settings.nette.form.get(0).method === 'get') {
-			this.href = settings.nette.form.get(0).action || window.location.href;
+		} else if (settings.nette.form[0].method === 'get') {
+			// grido submit buttons (search|reset)
+			if (settings.nette.form.hasClass('grido') && settings.nette.ui.name.indexOf('buttons[') === 0) {
+				this.href = settings.url;
+			} else {
+				this.href = settings.nette.form[0].action || window.location.href;
+			}
 		} else {
 			this.href = null;
 		}
@@ -90,7 +95,11 @@ $.nette.ext('history', {
 				window.location.href = redirect;
 			}
 		}
-		if (this.href && this.href != window.location.href) {
+
+		// here we could potentially clean up grido filters as in grido.js::handleSuccessEvent(payload)
+		// ...
+
+		if (this.href && this.href != window.location.href && this.href.indexOf('do=') === -1) {
 			history.pushState({
 				nette: true,
 				href: this.href,
