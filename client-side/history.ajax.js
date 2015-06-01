@@ -3,7 +3,9 @@
 // Is History API reliably supported? (based on Modernizr & PJAX)
 if (!(window.history && history.pushState && window.history.replaceState && !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/))) return;
 
-$.nette.ext('redirect', false);
+// make payload:redirect work
+// let this extension handle window.history api only
+//$.nette.ext('redirect', false);
 
 var findSnippets = function () {
 	var result = [];
