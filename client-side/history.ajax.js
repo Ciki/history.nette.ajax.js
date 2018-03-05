@@ -80,7 +80,9 @@
 			if (!settings.nette) {
 				this.href = null;
 			} else if (!settings.nette.form) {
+				if ($(settings.nette.ui).attr('rel') !== 'nohistory') {
 				this.href = settings.nette.ui.href;
+				}
 			} else if (settings.nette.form[0].method === 'get') {
 				// grido submit buttons (search|reset)
 				if (settings.nette.form.hasClass('grido') && settings.nette.ui.name.indexOf('buttons[') === 0) {
