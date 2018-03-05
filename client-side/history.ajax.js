@@ -103,12 +103,17 @@
 			// ...
 
 			if (this.href && this.href != window.location.href && this.href.indexOf('do=') === -1) {
-				history.pushState({
-					nette: true,
-					href: this.href,
-					title: document.title,
-					ui: this.cache ? saveSnippets(this.href) : null
-				}, document.title, this.href);
+				try {
+					history.pushState({
+						nette: true,
+						href: this.href,
+						title: document.title,
+						ui: this.cache ? saveSnippets(this.href) : null
+					}, document.title, this.href);
+				} catch (err) {
+					console.log('Cannot store state to history. Maybe content exceeds allowed size limit (640k for Firefox)?');
+					console.log(err);
+				}
 			}
 			this.href = null;
 			this.popped = true;
@@ -124,13 +129,18 @@
 		/**
 		 * Either save snippets to localStorage & return key or return snippets for fallbacks.
 		 * @param {String} hashKey
-		 * @returns {Array|String}
+		 * @returns {Array|String|null} NULL on error
 		 */
 		saveSnippets: function (hashKey) {
 			var snippets = findSnippets();
 			if (this.useLocalStorage && window.localStorage) {
-				localStorage.setItem(hashKey, JSON.stringify(snippets));
-				return hashKey;
+				try {
+					localStorage.setItem(hashKey, JSON.stringify(snippets));
+					return hashKey;
+					// storage can be full
+				} catch (err) {
+					return null;
+				}
 			} else {
 				return snippets;
 			}
