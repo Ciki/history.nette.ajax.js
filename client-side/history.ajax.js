@@ -81,7 +81,7 @@
 				this.href = null;
 			} else if (!settings.nette.form) {
 				if ($(settings.nette.ui).attr('rel') !== 'nohistory') {
-				this.href = settings.nette.ui.href;
+					this.href = settings.nette.ui.href;
 				}
 			} else if (settings.nette.form[0].method === 'get') {
 				// grido submit buttons (search|reset)
@@ -110,6 +110,7 @@
 
 			if (this.href && this.href != window.location.href && this.href.indexOf('do=') === -1) {
 				try {
+					// max size of stateObject being pushed is 640k for Firefox https://developer.mozilla.org/en-US/docs/Web/API/History_API#The_pushState%28%29_method
 					history.pushState({
 						nette: true,
 						href: this.href,
@@ -133,7 +134,7 @@
 			document.title = title;
 		},
 		/**
-		 * Either save snippets to localStorage & return key or return snippets for fallbacks.
+		 * Either save snippets to localStorage & return key or return snippets content to be processed elsewhere.
 		 * @param {String} hashKey
 		 * @returns {Array|String|null} NULL on error
 		 */
@@ -143,7 +144,7 @@
 				try {
 					localStorage.setItem(hashKey, JSON.stringify(snippets));
 					return hashKey;
-					// storage can be full
+					// storage can be full, max size ~10MB Chrome/Firefox, 5MB other browsers - https://www.html5rocks.com/en/tutorials/offline/quota-research/#toc-overview
 				} catch (err) {
 					return null;
 				}
