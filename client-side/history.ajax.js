@@ -127,7 +127,8 @@
 		}
 	}, {
 		href: null,
-		cache: true,
+//		cache: true,
+		cache: false,
 		useLocalStorage: true,
 		popped: false,
 		handleTitle: function (title) {
